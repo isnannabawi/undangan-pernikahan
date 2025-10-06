@@ -44,6 +44,16 @@
             animation: fadeIn 2s ease-in-out;
         }
 
+        .recipient-name {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            background-color: rgba(176, 142, 107, 0.8);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
         .names {
             font-family: 'Playfair Display', serif;
             font-size: 4rem;
@@ -73,6 +83,7 @@
             color: white;
             font-size: 1.5rem;
             animation: bounce 2s infinite;
+            cursor: pointer;
         }
 
         /* Couple Section */
@@ -314,6 +325,11 @@
                 flex-direction: column;
                 align-items: center;
             }
+            
+            .recipient-name {
+                font-size: 1.2rem;
+                padding: 8px 16px;
+            }
         }
     </style>
 </head>
@@ -325,6 +341,9 @@
             <div class="divider"></div>
             <h1 class="names">Sarah & Michael</h1>
             <p class="date">Sabtu, 15 Juni 2024</p>
+            <div id="recipientContainer" class="recipient-name">
+                <!-- Nama penerima akan ditampilkan di sini -->
+            </div>
         </div>
         <div class="scroll-down">
             <i class="fas fa-chevron-down"></i>
@@ -449,27 +468,53 @@
     </footer>
 
     <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
+        // Fungsi untuk mendapatkan parameter URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Menampilkan nama penerima dari parameter URL
+        function displayRecipientName() {
+            const recipientName = getUrlParameter('nama');
+            const recipientContainer = document.getElementById('recipientContainer');
+            
+            if (recipientName) {
+                recipientContainer.innerHTML = `<i class="fas fa-heart" style="margin-right: 10px;"></i>Kepada Yth. ${recipientName}<i class="fas fa-heart" style="margin-left: 10px;"></i>`;
+            } else {
+                // Jika tidak ada parameter nama, sembunyikan container
+                recipientContainer.style.display = 'none';
+            }
+        }
+
+        // Panggil fungsi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            displayRecipientName();
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
                 });
             });
-        });
 
-        // Form submission handling
-        document.querySelector('.rsvp-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Terima kasih telah mengkonfirmasi kehadiran Anda!');
-            this.reset();
-        });
+            // Form submission handling
+            document.querySelector('.rsvp-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Terima kasih telah mengkonfirmasi kehadiran Anda!');
+                this.reset();
+            });
 
-        // Scroll down button functionality
-        document.querySelector('.scroll-down').addEventListener('click', function() {
-            document.querySelector('#couple').scrollIntoView({
-                behavior: 'smooth'
+            // Scroll down button functionality
+            document.querySelector('.scroll-down').addEventListener('click', function() {
+                document.querySelector('#couple').scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
     </script>
